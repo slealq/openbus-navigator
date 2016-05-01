@@ -8,7 +8,7 @@ objects of Class GpsTracks.
 # Last Changes: Fix path() search for .txt
 
 from datetime import datetime
-from os import listdir
+import os
 
 def sub_string(str_in, str_end, string):
     '''
@@ -22,11 +22,11 @@ def sub_string(str_in, str_end, string):
     None
     ''' 
     if str_in in string and str_end in string:
-        index_ini = string.find(str_in)+len(str_ini)
-        index_end = string.find(str_end)
-        sub_str = string[index_ini:index_end]
+        index_in=string.find(str_in)+len(str_in)
+        index_end=string.find(str_end)
+        sub_str=string[index_in:index_end]
     else:
-        sub_str = None
+        sub_str=None
     return sub_str
 
 def lista_lat_lon(track):
@@ -36,7 +36,7 @@ def lista_lat_lon(track):
     track := (GpsTrack) where waypoint are taken
     Returns lists := (list) of tuples with fromat (lat,lon) 
     '''
-    lists = []
+    lists=[]
     if type(track) is GpsTrack: 
         for i in Track.waypoints():
             lists.append((i[0],i[1]))       
@@ -72,39 +72,39 @@ class GpsTrack:
     waypoints := (list) has an internal lists of information of every gps point
     on track format [latitud,longitude,elevation,time]
     '''
-    ID = 0
-    _name = ""
-    _date = ""
-    waypoints = []
+    ID=0
+    _name=""
+    _date=""
+    waypoints=[]
     
     #Builder
     def __init__(self, path, ID):
-        self.ID = ID
-        if path != "" and path[path.find("."):] == ".txt":
-            file = open(path, "r")
-            waypoints = []
-            cont = 0
+        self.ID=ID
+        if path!="" and path[path.find("."):]==".txt":
+            file=open(path, "r")
+            waypoints=[]
             for line in file:
                 if line.startswith("<name>"):
-                    self.name = subString("<name>","</name>",line)
-                    self.date = subString("Track ","</name>",line)
+                    self._name=sub_string("<name>","</name>",line)
+                    self._date=sub_string("Track ","</name>",line)
                 elif line.startswith("<trkpt"):
-                    lat = float(subString('lat="','" lon',line))
-                    lon = float(subString('lon="','">\n',line))
-                    ele = float(subString('<ele>','</ele>',file.readline()))
-                    time = subString('<time>','</time>',file.readline())
+                    lat=float(sub_string('lat="','" lon',line))
+                    lon=float(sub_string('lon="','">\n',line))
+                    ele=float(sub_string('<ele>','</ele>',file.readline()))
+                    time=sub_string('<time>','</time>',file.readline())
                     waypoints.append([lat,lon,ele,time])
             file.close()
-            self.waypoints = waypoints
+            self.waypoints=waypoints
 
     
 def main():
     # List of GpsTrack objects
-    tracks = []
-    cont = 1
-    for i in listdir("./TXT"): #Se agrega a la busqueda de la Carpeta TXT donde estan los archivos a leer
-        if i[i.find("."):] == ".txt":
-            tracks.append(GpsTrack("./TXT"+i,cont))
+    PATH=os.getcwd()+'/'+'TXT'
+    tracks=[]
+    cont=1
+    for i in os.listdir(PATH): 
+        if i[i.find("."):]==".txt":
+            tracks.append(GpsTrack(PATH+'/'+i,cont))
             cont+=1            
     for i in tracks:
         print (i.ID) #Screen print for good working
