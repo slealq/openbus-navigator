@@ -43,25 +43,59 @@ def lista_lat_lon(track):
     else:
         print ("Error 0X01: The DataType enter is not a GpsTrack") 
     return lists
-
-'''Rutas CODIGO EN PROCESO NO ESTA LISTO    
-def commonWayPoints(Tracks, epsilon, porc):
     
-    Función que compara las latitudes y longitudes de todos los waypoints de un track
-    y genera un listado común. Tomando un rango de error (epsilon) entre los datos
-    Parametros:
-
-    Tracks := Lista de objetos GpsTrack 
-    epsilon := float que indica el rango de error en los datos
-    porc := int que indica el porcentaje en común que deben tener los waypoints 
-    Return waypointsCom := listado de waypoints en común en formato [lat, lon]
+def common_diff_WayPoints(Tracks):
+    '''
+    Function that compares latitude and longitude of the differents objets in a Track list, and returns common waypoints within a error margen and a list of waypoints that differ from the common
+    Tracks := Object list of  GpsTrack 
+    Return waypointsCom := list of common waypoints in the format [lat, lon]'''
      
-    listaRutas = []
+    waypointsList = [] #list of waypoints obtain from the Track received
+    waypointsCom = []  #common waypoints list
+    waypointsDif = []  #waypoints that differ from the common waypoints
+    
     for i in Tracks:
-        listaRutas.append(listaLatLon(i))
-    for j in listaRutas[0]:
+        waypointsList.append(listaLatLon(i)) #get latitude and longitude of each waypoint
+
+    sorted(waypointsList, key=len) #order from smallest to biggest waypoint list
+
+    n = len(waypointsList)
+    #Find a temporary route by waypoints list, taking the biggest list of waypoints as reference
+    temp1 = [[]]*len(waypointsList[n])
+    for i in range(0,len(waypointsList[n]))
+        newStandar = waypointsList[n][i][0]
+        for entry in range(0,len(waypointsList))
+            for j in range(0,len(waypointsList[entry])
+                if waypointsList[entry][j][0] in range(newStandar-newStandar*0.00005,newStandar+newStandar*0.00005,)
+                    temp1[i].append(waypointsList[entry][j])
+    #Change the to waypointsDif the temp1[position] that has only one element
+    for data in range(0,len(temp1))
+        for i in range(0,len(temp1[data]))
+            if len(temp1[data][i])==1
+            waypointsDif.append(i)
+            del temp1[data][i]
+    #Check if all the data of each waypoint is on the temp1 list, if not it is change to waypointsDif
+    for data in range(0,len(temp1))
+            for position in range(0,len(temp1[data])
+                    if waypointsList[data][position] not in temp1
+                    waypointsDif.append(waypointsList[data][j])
+            
+    #Remove all empty spaces from temp1    
+    temp2 = filter(None,temp1)
+
+    #Final common waypointsList,as an average of the similar (lat,lon) data
+    latTemp = 0
+    latTemp = 0
+    for i in range(0,len(temp1))
+        for j in range(0,len(temp1[i]))
+           latTemp = temp1[i][j][0] + latTemp
+           lonTemp = temp1[i][j][1] + lonTemp
+        latitude = latTemp/len(temp1[i])
+        longitude = lonTemp/len(temp1[i])
+        waypointsCom.append([latitude,longitude])
+
+    return waypointsCom,waypoinstDif 
         
-'''        
     
 class GpsTrack:
     '''
@@ -102,11 +136,11 @@ def main():
     # List of GpsTrack objects
     tracks = []
     cont = 1
-    for i in listdir("./TXT"): #Se agrega a la busqueda de la Carpeta TXT donde estan los archivos a leer
+    for i in listdir("./TXT"): #Add where the file TXT is,where it is locate the data for reading
         if i[i.find("."):] == ".txt":
             tracks.append(GpsTrack("./TXT"+i,cont))
             cont+=1            
     for i in tracks:
         print (i.ID) #Screen print for good working
-        
+    print "The estimated route for this input data is "     
 main() #Run the main
