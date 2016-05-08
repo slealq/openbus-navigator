@@ -8,5 +8,10 @@ If you DO NOT have pip, i recommend you to install it. If you don't want to do t
    * gpxpy
    * geopy
    * dropbox
-   
+
+####Installing dependencies via pip:
+
+    pip install geopy
+
+
 For more information about how does the dropbox api core works: https://www.dropbox.com/developers-v1/core/sdks/python
