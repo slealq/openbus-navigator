@@ -13,5 +13,10 @@ If you DO NOT have pip, i recommend you to install it. If you don't want to do t
 
     pip install geopy
 
+Note that you might need sudo in front of pip if it asks you.
 
 For more information about how does the dropbox api core works: https://www.dropbox.com/developers-v1/core/sdks/python
+
+####Things to be done
+
+First of all, the implementation of the server must be converted for multiple clients. As right now it is all done 

@@ -7,10 +7,11 @@ Here it will go a helper function that will find the bus stops according to a cu
 # Libraries
 import os, re
 from geopy.distance import great_circle
+import gpx_manager
 
 # Variables
 PATH=os.getcwd()+'/'+'TXT'# This makes the assumption that we are working in a parent directory, where there is a directory named TXT
-PHI=15# Quantity in meters for the tolerance in the search in m
+PHI=75# Quantity in meters for the tolerance in the search in m
 
 # Helper functions
 def bus_stops(txt_files_names):
@@ -50,10 +51,39 @@ def bus_stops(txt_files_names):
                     flag_second=False# Set the flag to false again
                 else:# If the founded items are not in any list, then: 
                     neighboors.append([entry, lat_lon[rest_entries]])# Make a new list with both items.
+
+    before_number_items=len(neighboors[0])
+    stop_arrays=[]
                 
+    # for each neighboor list, if there is a difference in quantity of neighboors append that neighboorhod to stop_arrays
     for item_list in range(0, len(neighboors)):
-        print neighboors[item_list]
+        #print neighboors[item_list]
+        number_items=len(neighboors[item_list])
+        if number_items!=before_number_items:
+            #print "Diferencia"
+            #print neighboors[item_list-1][0], neighboors[item_list][0]
+            stop_arrays.append(neighboors[item_list])
+        before_number_items=number_items
+        
+    # Now it makes an average result of those listings, and save those averages in stops arrays
+    stops=[]
+    added_lat=0.00
+    added_lon=0.00
+    for items in range(0, len(stop_arrays)):
+        for neigh in range(0, len(stop_arrays[items])):
+            #print added_lat
+            #print added_lon
+            #print neighboors[items][neigh][0]
+            added_lat+=float(stop_arrays[items][neigh][0])
+            added_lon+=float(stop_arrays[items][neigh][1])
+        prom_lat=added_lat/len(stop_arrays[items])
+        prom_lon=added_lon/len(stop_arrays[items])
+        added_lat=0
+        added_lon=0
+        stops.append((prom_lat, prom_lon))
+    return stops # Return the stop arrays
             
     #print str(lat_lon[210])+" "+str(lat_lon[193])
 # Main start
-bus_stops(os.listdir(PATH))
+paradas=bus_stops(os.listdir(PATH)) # returns a list of stops with tuples inside of lat and lon
+gpx_manager.data2gpx(paradas)
